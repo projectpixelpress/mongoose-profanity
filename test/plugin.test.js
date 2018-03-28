@@ -79,7 +79,7 @@ var Test4 = mongoose.model('Test4', TestSchema4);
 
 describe('Profanity plugin', function() {
 
-  beforeEach((done) => { //Before each test we empty the database
+  before((done) => { //Before each test we empty the database
     Test.remove().then(() => {
       Test2.remove().then(() => {
         Test3.remove().then(() => {
@@ -195,7 +195,7 @@ describe('Profanity plugin', function() {
   })
 
   it('correctly updates only the requested fields with purified string', (done) => {
-    let test4 = new Test4({text: 'testing boob something partial replace', name: "poop", phone: 'poop'});
+    let test4 = new Test4({text: 'testing boob classroom uranus something partial replace', name: "tit", phone: 'poop'});
 
     test4.save(function(err, entry) {
       if (err) {
@@ -203,9 +203,9 @@ describe('Profanity plugin', function() {
       }
 
       entry.phone.should.equal('poop');
-      entry.text.should.equal('testing bunny something partial replace');
+      entry.text.should.equal('testing bunny classroom uranus something partial replace');
       entry.name.should.equal('bunny');
-      
+
       done();
 
     });
