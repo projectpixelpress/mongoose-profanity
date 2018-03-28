@@ -77,6 +77,28 @@ TestSchema4.plugin(profanityPlugin, {
 
 var Test4 = mongoose.model('Test4', TestSchema4);
 
+//
+// TEST 5
+//
+var TestSchema5 = new Schema({
+  text: String,
+  name: String,
+  data: {
+    title: String,
+    otherText: String
+  }
+});
+
+TestSchema5.plugin(profanityPlugin, {
+  replace: true,
+  replacementsList: [
+    'bunny'
+  ],
+  fields: ['data', 'title']
+});
+
+var Test5 = mongoose.model('Test5', TestSchema5);
+
 describe('Profanity plugin', function() {
 
   before((done) => { //Before each test we empty the database
@@ -84,7 +106,9 @@ describe('Profanity plugin', function() {
       Test2.remove().then(() => {
         Test3.remove().then(() => {
           Test4.remove().then(() => {
-            done();
+            Test5.remove().then(() => {
+              done();
+            });
           });
         });
       });
@@ -205,6 +229,31 @@ describe('Profanity plugin', function() {
       entry.phone.should.equal('poop');
       entry.text.should.equal('testing bunny classroom uranus something partial replace');
       entry.name.should.equal('bunny');
+
+      done();
+
+    });
+  })
+
+  it('correctly updates only the requested nested fields with purified string', (done) => {
+    let updateFields = {
+      text: 'boob',
+      data: {
+        title: 'poop',
+        otherText: 'butt'
+      }
+    };
+
+    let test5 = new Test5(updateFields)
+
+    test5.save(function(err, entry) {
+      if (err) {
+        throw err;
+      }
+
+      entry.text.should.equal('boob');
+      entry.data.title.should.equal('bunny');
+      entry.data.otherText.should.equal('butt');
 
       done();
 
