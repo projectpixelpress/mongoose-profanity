@@ -144,50 +144,13 @@ describe('Profanity plugin', function() {
     });
   });
 
-  it('adds a flag for each bad word used, only in configured schema fields', function(done) {
-    true.should.be.ok;
-
-    var test = new Test({title: 'Test crap boob', description: 'bollok', immune: 'butt damn'});
-
-    test.save(function(err, entry) {
-      if (err) {
-        throw err;
-      }
-
-      entry.flags.should.have.length(3);
-      should(entry.flags[0].author).equal(null);
-      entry.flags[0].reason.should.equal('Inappropriate language');
-      entry.title.should.equal('Test c**p b**b');
-      entry.description.should.equal('b****k');
-      entry.immune.should.equal('butt damn');
-      should(entry.blackListed).equal(false);
-
-      done();
-    });
-  });
-
-  it('blacklists object correctly when finds more swearwords', function(done) {
-    new Test({title: 'testing poo foo crap bar damn somthing butt bar fanny'}).save(function(err, entry) {
-      if (err) {
-        throw err;
-      }
-
-      entry.flags.should.have.length(5);
-      entry.blackListed.should.be.ok;
-
-      done();
-    });
-  });
-
   it('works correctly with partial replace option', function(done) {
     new Test2({text: 'testing poop something partial replace'}).save(function(err, entry) {
       if (err) {
         throw err;
       }
 
-      entry.flags.should.have.length(1);
       entry.text.should.equal('testing p%%p something partial replace');
-      entry.blackListed.should.not.be.ok;
 
       done();
     });
@@ -198,8 +161,6 @@ describe('Profanity plugin', function() {
       if (err) {
         throw err;
       }
-
-      entry.blackListed.should.be.ok;
 
       util.testPurified(entry.text, '[ placeholder ] unchanged [ placeholder ] unchanged [ placeholder ] unchanged', 'oof|rab|tset');
 
